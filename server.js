@@ -3,7 +3,8 @@ var WebSocketServer = require('ws').Server,
     express = require('express'),
     app = express(),
     port = process.env.PORT || 5000,
-    _ = require('underscore');
+    _ = require('underscore'),
+    irc = require('irc');
 
 
 app.use(express.static(__dirname + '/'));
@@ -23,6 +24,22 @@ wss.on('connection', function(ws) {
 
     ws.on('close', function() {
         console.log("websocket connection close");
-        _.reject(clients, function(client){ return client === ws; }); 
+        console.log("websocket index: %d", clients.indexOf(ws));
+        clients = _.without(clients, ws);
+        console.log("total websockets %d", clients.length);
+    });
+});
+
+var ircClient = new irc.Client('irc.wikimedia.org', 'wiki-update-sockets', {
+    channels: ['#en.wikipedia'],
+});
+
+ircClient.addListener('error', function(message) {
+    console.log('error: ', message);
+});
+
+ircClient.addListener('message', function(from, to, message) {
+    _.each(clients, function(client, index, list) {
+        client.send("Message received: " + message);
     });
 });
