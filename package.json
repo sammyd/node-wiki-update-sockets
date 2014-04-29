@@ -1,0 +1,16 @@
+{
+    "name": "wiki-update-sockets",
+    "version": "0.0.1",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/sammyd/wiki-update-sockets.git"
+    },
+    "dependencies": {
+        "irc": "0.3.x"
+    },
+    "engines": {
+        "node": "0.10.x",
+        "npm": "1.4.x"
+    }
+
+}
