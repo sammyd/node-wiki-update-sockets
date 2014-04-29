@@ -6,7 +6,10 @@
         "url": "git://github.com/sammyd/wiki-update-sockets.git"
     },
     "dependencies": {
-        "irc": "0.3.x"
+        "irc": "0.3.x",
+        "underscore": "1.6.x",
+        "ws": "0.4.x",
+        "express": "3.x"
     },
     "engines": {
         "node": "0.10.x",
