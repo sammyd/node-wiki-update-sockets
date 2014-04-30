@@ -52,21 +52,34 @@ function extract_message_type(message) {
         return "special";
     } else if(message.indexOf("[[Talk:") >= 0) {
         return "talk";
-    } else if(message.indexOf("[[User:") >= 0) {
+    } else if(message.indexOf("[[User ") >= 0) {
         return "user";
+    } else if(message.indexOf("[[File:") >= 0) {
+        return "file";
     } else {
         return "unspecified";
     }
+}
+
+function create_payload_from_message(message) {
+    var type = extract_message_type(message);
+    var content = "";
+    if(type == "unspecified") {
+        content = message.match(/^\[\[(.*?)\]\]/)[1];
+    }
+    msg = {
+        "type": type,
+        "content": content,
+        "time": new Date()
+    };
+    return msg;
 }
 
 // Messages should be processed and sent to each of the web socket clients
 ircClient.addListener('message', function(from, to, message) {
     var msg;
     if(clients.length > 0) {
-        msg = {
-            "type": extract_message_type(message),
-            "time": new Date()
-        };
+        msg = create_payload_from_message(message);
     }
     _.each(clients, function(client, index, list) {
         client.send(JSON.stringify(msg));
